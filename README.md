@@ -21,3 +21,12 @@ A	, B
 ```
 
 Basically a simple Excel engine without any UI.
+
+The project is using
+[nobuild](https://github.com/tsoding/nobuild) build system.
+
+```console
+$ cc -o nobuild nobuild.c
+$ ./nobuild
+$ ./minicel
+```
