@@ -3,8 +3,7 @@ nobuild
 nobuild.old
 '#*
 *~
-
-
+.vscode
 # -*- mode: gitignore; -*-
 *~
 \#*\#

@@ -7,7 +7,7 @@ int main(int argc, char **argv){
 	CMD("cc", CFLAGS, "-o", "minicel", "src/main.c");
 		if(argc > 1){
 			if(strcmp(argv[1], "run") == 0){
-				CMD("./minicel");
+				CMD("./minicel", argv[2]);
 			} else {
 				PANIC("'%s' IS UNKNOWN SUBCOMMAND!", argv[1]);
 			}
