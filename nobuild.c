@@ -4,11 +4,13 @@
 
 int main(int argc, char **argv){
 	GO_REBUILD_URSELF(argc, argv);
-	CMD("cc", CFLAGS, "-o", "minicel", "src/main.c");
+	CMD("clang", CFLAGS,"-fsanitize=memory", "-o", "minicel", "src/main.c");
 		if(argc > 1){
 			if(strcmp(argv[1], "run") == 0){
 				CMD("./minicel", argv[2]);
-			} else {
+			} else if(strcmp(argv[1], "gdb") == 0){
+				CMD("gdb", "./minicel");
+			}else {
 				PANIC("'%s' IS UNKNOWN SUBCOMMAND!", argv[1]);
 			}
 		}
