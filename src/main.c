@@ -61,6 +61,12 @@ Expr *expr_buffer_at(Expr_Buffer *eb, Expr_Index index){
 	return &eb->items[index];
 }
 
+void expr_buffer_dump(FILE *stream, const Expr_Buffer *eb, Expr_Index root){
+	fwrite(&root, sizeof(root), 1, stream);
+	fwrite(&eb->count, sizeof(eb->count), 1, stream);
+	fwrite(eb->items, sizeof(Expr), eb->count,stream);
+}
+
 typedef enum {
 	CELL_KIND_TEXT = 0,
 	CELL_KIND_NUMBER,
@@ -420,6 +426,46 @@ void table_eval_cell(Table *table, Cell *cell, Expr_Buffer *eb){
 			cell->as.expr.status = EVALUATED;
 		}
 	}
+}
+
+// * dump into hard disk
+/* int main(){ */
+/* 	Expr_Buffer eb = {0}; */
+/* 	String_View source = SV_STATIC("10 + 20 + A1 + B1 + 69 + 240"); */
+/* 	Expr_Index expr_index = parse_expr(&source, &eb); */
+/* 	dump_expr(stdout, &eb, expr_index, 0); */
+/* 	const char * bin_file_path = "expr.bin"; */
+/* 	FILE *f = fopen(bin_file_path, "wb");  */
+/* 	expr_buffer_dump(f, &eb, expr_index); */
+/* 	fclose(f); */
+/* 	free(eb.items); */
+/* 	printf("Saved the dump to %s \n", bin_file_path); */
+/* 	return 0; */
+/* } */
+
+// 51:22 
+int main2(){
+	const char * dump_file_path = "expr.bin";
+	FILE *f = fopen(dump_file_path, "rb");
+
+	Expr_Index root = 0;
+	fread(&root, sizeof(root), 1, f);
+
+	size_t count = 0;
+	fread(&count, sizeof(count), 1 , f);
+
+	Expr_Buffer eb = {0};
+	eb.count = count;
+	eb.capacity = count;
+	eb.items = malloc(sizeof(Expr) * eb.capacity);
+	fread(eb.items, sizeof(Expr), eb.count, f);
+
+	fclose(f);
+
+	dump_expr(stdout, &eb, root, 0);
+
+	// free(eb.items);
+	return 0;
 }
 
 int main(int argc, char **argv)
